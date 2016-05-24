@@ -44,8 +44,8 @@ object FlightParametersExtracter {
       println("Enter 1 To sort According To Fare 2 To sort According To Fare-Duration:")
       val choice = scala.io.StdIn.readInt()
       val flightList: List[Flight] = searchFlight.getFlights(depLoc, arrLoc, date, choice)
-      flightList.foreach {flights => flightList
-        println(flights)
+      flightList.foreach {flights =>
+        println(flights.toString)
       }
     }
     scanDetails

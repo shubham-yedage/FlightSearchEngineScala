@@ -6,12 +6,15 @@ import scala.io.Source
   */
 class SearchFlights(fList: List[String]) {
 
+
   def getFlights(depLoc: String, arrLoc: String, date: String, choice: Int): List[Flight] = {
     //return list
-    var flightsList: List[Flight] = Nil
-    val directFlights=new ListBuffer[Flight]
-    fList.foreach { flightFileName => fList
+    val directFlights = new ListBuffer[Flight]
+    val depLocRelatedFlights = new ListBuffer[Flight]
+    val arrLocRelatedFlights =new ListBuffer[Flight]
 
+    //Get list of direct flights- Flight List from depLoc- Flight List to arrLoc
+    fList.foreach { flightFileName =>
       val resourcesStream = getClass.getResourceAsStream(flightFileName)
       val lines = Source.fromInputStream(resourcesStream).getLines
       lines.next()
@@ -19,22 +22,39 @@ class SearchFlights(fList: List[String]) {
       //return direct flights list
       directFlights.appendAll(searchDirectFlights(lines, depLoc, arrLoc, date))
 
-      //return connecting flights list
-      //val depLocRelatedFlightList: List[String] = searchRelatedFlights(lines, depLoc, date)
-      //val depLocRelatedFlightList: List[String] = searchRelatedFlights(lines, arrLoc, date)
-
+      //return depLoc-arrLoc flights list
+      depLocRelatedFlights.appendAll(searchRelatedFlights(lines, depLoc, date,1))
+      arrLocRelatedFlights.appendAll(searchRelatedFlights(lines,arrLoc,date,2))
     }
-    flightsList=directFlights.toList
+    val flightsList = directFlights.toList
     flightsList
   }
 
 
   def searchDirectFlights(lines: Iterator[String], depLoc: String, arrLoc: String, date: String): List[Flight] = {
-    val fList: Iterator[String] = for {
-      line <- lines
-      cols = line.split(",").map(_.trim)
-      if (cols(1).equalsIgnoreCase(depLoc) && cols(2).equalsIgnoreCase(arrLoc) && cols(3).equalsIgnoreCase(date))
-    } yield cols(0)
-    fList.toList
+    var tempFlightListBuff = new ListBuffer[Flight]
+    lines.foreach {
+      line =>
+        val cols = line.split(",").map(_.trim)
+        if (cols(1).equalsIgnoreCase(depLoc) && cols(2).equalsIgnoreCase(arrLoc) && cols(3).equalsIgnoreCase(date)) {
+          tempFlightListBuff.+=(new Flight(cols(0), cols(1), cols(2), cols(3), cols(4).toInt, cols(5).toFloat, cols(6).toFloat))
+          //println(cols(1)+cols(2)+cols(3)+cols(4)+cols(5)+cols(6))
+
+        }
+    }
+    tempFlightListBuff.toList
   }
+
+  def searchRelatedFlights(lines: Iterator[String], Loc: String, date: String,i: Int): List[Flight] = {
+    var tempFlightListBuff = new ListBuffer[Flight]
+    lines.foreach {
+      line =>
+        val cols = line.split(",").map(_.trim)
+        if (cols(i).equalsIgnoreCase(Loc) && cols(3).equalsIgnoreCase(date)) {
+          tempFlightListBuff.+=(new Flight(cols(0), cols(1), cols(2), cols(3), cols(4).toInt, cols(5).toFloat, cols(6).toFloat))
+        }
+    }
+    tempFlightListBuff.toList
+  }
+
 }
