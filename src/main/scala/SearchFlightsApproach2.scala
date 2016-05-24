@@ -26,11 +26,17 @@ class SearchFlightsApproach2(fList: List[String]) {
     val directFlights = flightList.filter(filterDirectFlights)
 
     //Connecting Flights
-    val connFlights1 = flightList.filter(_.departure.equalsIgnoreCase(depLoc))
-    val conFlights2 = flightList.filter(_.arrival.equalsIgnoreCase(arrLoc))
+    val connFlights1 = flightList.filter(_.departure.equalsIgnoreCase(depLoc)).filterNot(_.arrival.equalsIgnoreCase(arrLoc))
+    val conFlights2 = flightList.filter(_.arrival.equalsIgnoreCase(arrLoc)).filterNot(_.departure.equalsIgnoreCase(depLoc))
 
+    var connFlightListBuff = new ListBuffer[Flight]
+    connFlights1.foreach { flight =>
+      var tempList = conFlights2.filter(a => a.departure.equalsIgnoreCase(flight.arrival))
+      connFlightListBuff.appendAll(tempList)
+    }
 
-    directFlights.:::(conFlights2).:::(connFlights1)
+    connFlightListBuff.toList
+    //    directFlights.:::(conFlights2).:::(connFlights1)
   }
 
 }
