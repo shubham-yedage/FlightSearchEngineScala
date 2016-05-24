@@ -1,3 +1,4 @@
+import scala.collection.mutable.ListBuffer
 import scala.io.Source
 
 /**
@@ -5,27 +6,30 @@ import scala.io.Source
   */
 class SearchFlights(fList: List[String]) {
 
-  def getFlights(depLoc: String, arrLoc: String, date: String, choice: Int): List[String] = {
+  def getFlights(depLoc: String, arrLoc: String, date: String, choice: Int): List[Flight] = {
     //return list
-    var flightsList: List[String] = Nil
+    var flightsList: List[Flight] = Nil
+    val directFlights=new ListBuffer[Flight]
     fList.foreach { flightFileName => fList
+
       val resourcesStream = getClass.getResourceAsStream(flightFileName)
       val lines = Source.fromInputStream(resourcesStream).getLines
       lines.next()
+
       //return direct flights list
-      val directFlights: List[String] = searchDirectFlights(lines, depLoc, arrLoc, date)
-      flightsList = List.concat(flightsList, directFlights)
+      directFlights.appendAll(searchDirectFlights(lines, depLoc, arrLoc, date))
 
       //return connecting flights list
-      //val depLocRelatedFlightList: List[String] = searchRelatedFlights(depLoc, date)
-      //val depLocRelatedFlightList: List[String] = searchRelatedFlights(arrLoc, date)
+      //val depLocRelatedFlightList: List[String] = searchRelatedFlights(lines, depLoc, date)
+      //val depLocRelatedFlightList: List[String] = searchRelatedFlights(lines, arrLoc, date)
 
     }
+    flightsList=directFlights.toList
     flightsList
   }
 
 
-  def searchDirectFlights(lines: Iterator[String], depLoc: String, arrLoc: String, date: String): List[String] = {
+  def searchDirectFlights(lines: Iterator[String], depLoc: String, arrLoc: String, date: String): List[Flight] = {
     val fList: Iterator[String] = for {
       line <- lines
       cols = line.split(",").map(_.trim)
