@@ -34,7 +34,7 @@ object FlightParametersExtracter {
     val fList = List("/AIR_FRANCE.csv", "/BRITISH_AIRWAYS.csv", "/LUFTHANSA_AIRWAYS.csv")
     val searchFlight = new SearchFlights(fList)
 
-    def scanDetails(): Unit= {
+    def scanDetails(): Unit = {
       println("Hello User. Enter Search Details!Enter Departure Location:")
       val depLoc = scala.io.StdIn.readLine()
       println("Enter Arrival Location:")
@@ -43,9 +43,12 @@ object FlightParametersExtracter {
       val date = scala.io.StdIn.readLine()
       println("Enter 1 To sort According To Fare 2 To sort According To Fare-Duration:")
       val choice = scala.io.StdIn.readInt()
-      searchFlight.getFlights(depLoc, arrLoc, date, choice)
+      val flightList: List[String] = searchFlight.getFlights(depLoc, arrLoc, date, choice)
+      flightList.foreach {flights => flightList
+        println(flights)
+      }
     }
-   scanDetails
+    scanDetails
     //=======================================================
     //    val resourcesStream = getClass.getResourceAsStream("/AIR_FRANCE.csv")
     //    val lines = Source.fromInputStream(resourcesStream).getLines
