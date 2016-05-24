@@ -32,7 +32,7 @@ object FlightParametersExtracter {
     //    println(resourcesPath.getPath)
     //==========================================
     val fList = List("/AIR_FRANCE.csv", "/BRITISH_AIRWAYS.csv", "/LUFTHANSA_AIRWAYS.csv")
-    val searchFlight = new SearchFlights(fList)
+    val searchFlight = new SearchFlightsApproach2(fList)
 
     def scanDetails(): Unit = {
       println("Hello User. Enter Search Details!Enter Departure Location:")
