@@ -1,0 +1,4 @@
+[0m[[0mdebug[0m] [0mCopy resource mappings: [0m
+[0m[[0mdebug[0m] [0m	(/home/synerzip/codebase/FlightSearchEngineScala/src/main/resources/BRITISH_AIRWAYS.csv,/home/synerzip/codebase/FlightSearchEngineScala/target/scala-2.11/classes/BRITISH_AIRWAYS.csv)[0m
+[0m[[0mdebug[0m] [0m	(/home/synerzip/codebase/FlightSearchEngineScala/src/main/resources/AIR_FRANCE.csv,/home/synerzip/codebase/FlightSearchEngineScala/target/scala-2.11/classes/AIR_FRANCE.csv)[0m
+[0m[[0mdebug[0m] [0m	(/home/synerzip/codebase/FlightSearchEngineScala/src/main/resources/LUFTHANSA_AIRWAYS.csv,/home/synerzip/codebase/FlightSearchEngineScala/target/scala-2.11/classes/LUFTHANSA_AIRWAYS.csv)[0m
