@@ -1,6 +1,4 @@
-/**
-  * Created by synerzip on 24/5/16.
-  */
+
 class Flight(private var _name: String, var _departure: String, var _arrival: String, var _depDate: String, var _depTime: Int, var _duration: Float, var _fare: Float) {
 
   //Default Constructor
@@ -47,8 +45,9 @@ class Flight(private var _name: String, var _departure: String, var _arrival: St
   def canEqual(other: Any): Boolean = other.isInstanceOf[Flight]
 
   override def toString = {
-    name+" "+departure+" "+arrival+" "+depDate+" "+depTime+" "+duration+" "+fare
+    name + " " + departure + " " + arrival + " " + depDate + " " + depTime + " " + duration + " " + fare
   }
+
   override def equals(other: Any): Boolean = other match {
     case that: Flight =>
       (that canEqual this) &&
@@ -61,6 +60,7 @@ class Flight(private var _name: String, var _departure: String, var _arrival: St
         _fare == that._fare
     case _ => false
   }
+
   //Hash Code
   override def hashCode(): Int = {
     val state = Seq(_name, _departure, _arrival, _depDate, _depTime, _duration, _fare)

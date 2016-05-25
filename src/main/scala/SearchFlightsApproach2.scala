@@ -1,11 +1,7 @@
 import scala.collection.mutable.ListBuffer
 import scala.io.Source
 
-/**
-  * Created by synerzip on 24/5/16.
-  */
 class SearchFlightsApproach2(fList: List[String]) {
-
 
   def getFlights(depLoc: String, arrLoc: String, date: String, choice: Int): List[Flight] = {
     var tempFlightListBuff = new ListBuffer[Flight]
@@ -20,23 +16,32 @@ class SearchFlightsApproach2(fList: List[String]) {
           tempFlightListBuff.+=(new Flight(cols(0), cols(1), cols(2), cols(3), cols(4).toInt, cols(5).toFloat, cols(6).toFloat))
       }
     }
-    val flightList = tempFlightListBuff.toList.filter(_.depDate.equalsIgnoreCase(date))
+
+    def filterToGetAllRelatedFlights(flight: Flight): Boolean = return flight.departure.equalsIgnoreCase(depLoc) || flight.arrival.equalsIgnoreCase(arrLoc)
+    val flightList = tempFlightListBuff.toList.filter(_.depDate.equalsIgnoreCase(date)).filter(filterToGetAllRelatedFlights)
+
+    if (flightList.isEmpty) {
+      throw new NoSuchFieldException("Results for Current Search Not Found!")
+    }
     //Direct Flights
     def filterDirectFlights(flight: Flight): Boolean = return flight.departure.equalsIgnoreCase(depLoc) && flight.arrival.equalsIgnoreCase(arrLoc)
     val directFlights = flightList.filter(filterDirectFlights)
 
     //Connecting Flights
-    val connFlights1 = flightList.filter(_.departure.equalsIgnoreCase(depLoc)).filterNot(_.arrival.equalsIgnoreCase(arrLoc))
-    val conFlights2 = flightList.filter(_.arrival.equalsIgnoreCase(arrLoc)).filterNot(_.departure.equalsIgnoreCase(depLoc))
-
-    var connFlightListBuff = new ListBuffer[Flight]
-    connFlights1.foreach { flight =>
-      var tempList = conFlights2.filter(a => a.departure.equalsIgnoreCase(flight.arrival))
-      connFlightListBuff.appendAll(tempList)
+    val connFlights1 = flightList.filter(_.departure.equalsIgnoreCase(depLoc)).filterNot(filterDirectFlights)
+    val conFlights2 = flightList.filter(_.arrival.equalsIgnoreCase(arrLoc)).filterNot(filterDirectFlights)
+    var connFlights = new scala.collection.mutable.ListBuffer[Flight]()
+    connFlights1.foreach { flight1 =>
+      def filterForConnectingFlights(flight2: Flight): Boolean = return (flight1.depTime + (flight1.duration * 100).toInt) > (flight2.depTime)
+      var tempList = conFlights2.filter(_.departure.equalsIgnoreCase(flight1.arrival)).filter(filterForConnectingFlights)
+      if (tempList.length > 0) {
+        tempList.foreach { flight2 =>
+          connFlights += flight1
+          connFlights += flight2
+        }
+      }
     }
-
-    connFlightListBuff.toList
-    //    directFlights.:::(conFlights2).:::(connFlights1)
+    directFlights.:::(connFlights.toList)
   }
 
 }
